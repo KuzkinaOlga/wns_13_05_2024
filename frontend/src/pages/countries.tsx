@@ -18,11 +18,14 @@ const GET_COUNTRIES = gql`
 `;
 
 const ADD_COUNTRY = gql`
-  mutation AddCountry($code: String!, $name: String!, $emoji: String!) {
-    addCountry(code: $code, name: $name, emoji: $emoji) {
+ mutation AddCountry($data: NewCountryInput!) {
+    addCountry(data: $data) {
       code
       name
       emoji
+      continent {
+        name
+      }
     }
   }
 `;
@@ -68,7 +71,15 @@ const CountriesPage = () => {
     e.preventDefault();
     if (name && code && emoji) {
       try {
-        await addCountry({ variables: { name, code, emoji } });
+       await addCountry({
+          variables: {
+            data: {
+              name,
+              code,
+              emoji,
+            },
+          },
+        });
         setName('');
         setCode('');
         setEmoji('');
